@@ -1,0 +1,13 @@
+{
+  "cert_path": "path/file.pfx",
+  "cert_pass": "password",
+  "cnpj": "",
+  "output_xml_dir": "./xml",
+  "output_pdf_dir": "./pdf",
+  "log_dir": "logs",
+  "file_prefix": "NFS-e",
+  "download_pdf": true,
+  "delay_seconds": 10,
+  "auto_start": false,
+  "timeout": 30
+}
