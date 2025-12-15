@@ -7,7 +7,7 @@ from dataclasses import dataclass, asdict
 class Config:
     cert_path: str = ""
     cert_pass: str = ""
-    cnpj: str = ""
+    cnpjcpf: str = ""
     output_xml_dir: str = "./xml"
     output_pdf_dir: str = "./pdf"
     log_dir: str = "logs"
@@ -20,7 +20,7 @@ class Config:
     REQUIRED_FIELDS = [
         "cert_path",
         "cert_pass",
-        "cnpj",
+        "cnpjcpf",
         "output_xml_dir",
         "output_pdf_dir",
         "log_dir"

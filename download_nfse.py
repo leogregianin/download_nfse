@@ -55,8 +55,14 @@ class App:
         finally:
             self.running = False
 
-REQUIRED_FIELDS = ["cert_path", "cert_pass", "cnpj", "output_xml_dir", "output_pdf_dir", "log_dir"]
-
+REQUIRED_FIELDS = [
+    "cert_path",
+    "cert_pass",
+    "cnpjcpf",
+    "output_xml_dir",
+    "output_pdf_dir",
+    "log_dir"
+]
 
 def ler_config() -> Config:
     return Config.load(CONFIG_FILE)

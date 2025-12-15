@@ -1,7 +1,7 @@
 {
   "cert_path": "path/file.pfx",
   "cert_pass": "password",
-  "cnpj": "",
+  "cnpjcpf": "",
   "output_xml_dir": "./xml",
   "output_pdf_dir": "./pdf",
   "log_dir": "logs",

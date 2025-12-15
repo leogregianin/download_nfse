@@ -23,7 +23,7 @@ pip install -r requirements.txt
 
 - `cert_path`: caminho do certificado digital.
 - `cert_pass`: senha do certificado.
-- `cnpj`: CNPJ utilizado no portal.
+- `cnpjcpf`: CNPJ/CPF utilizado no portal.
 - `output_xml_dir`: pasta onde os XMLs serão salvos.
 - `output_pdf_dir`: pasta onde os PDFs serão salvos.
 - `log_dir`: diretório de logs.

@@ -50,10 +50,10 @@ class NFSeDownloader:
         self.logger = logging.getLogger(__name__)
         self.session: Optional[requests.Session] = None
 
-    def ler_ultimo_nsu(self, cnpj: Optional[str] = None) -> int:
-        if cnpj is None:
-            cnpj = self.config.cnpj
-        fname = f"ultimo_nsu_{cnpj}.txt"
+    def ler_ultimo_nsu(self, cnpjcpf: Optional[str] = None) -> int:
+        if cnpjcpf is None:
+            cnpjcpf = self.config.cnpjcpf
+        fname = f"ultimo_nsu_{cnpjcpf}.txt"
         if os.path.exists(fname):
             with open(fname, "r", encoding="utf-8") as f:
                 try:
@@ -62,10 +62,10 @@ class NFSeDownloader:
                     pass
         return 1
 
-    def salvar_ultimo_nsu(self, nsu: int, cnpj: Optional[str] = None) -> None:
-        if cnpj is None:
-            cnpj = self.config.cnpj
-        fname = f"ultimo_nsu_{cnpj}.txt"
+    def salvar_ultimo_nsu(self, nsu: int, cnpjcpf: Optional[str] = None) -> None:
+        if cnpjcpf is None:
+            cnpjcpf = self.config.cnpjcpf
+        fname = f"ultimo_nsu_{cnpjcpf}.txt"
         with open(fname, "w", encoding="utf-8") as f:
             f.write(str(nsu))
 
@@ -131,7 +131,7 @@ class NFSeDownloader:
         cfg = self.config
         cert_path = cfg.cert_path
         cert_pass = cfg.cert_pass
-        cnpj = cfg.cnpj
+        cnpjcpf = cfg.cnpjcpf
         output_xml_dir = cfg.output_xml_dir
         output_pdf_dir = cfg.output_pdf_dir
         log_dir = cfg.log_dir
@@ -150,7 +150,7 @@ class NFSeDownloader:
             format="%(asctime)s %(levelname)s: %(message)s",
         )
         write(f"Log registrado em: {log_name}", log=False)
-        write(f"Consultando NFS-e para CNPJ {cnpj}.", log=True)
+        write(f"Consultando NFS-e para CNPJ/CPF {cnpjcpf}.", log=True)
 
         nsus_baixados = set()
         total_baixados = 0
@@ -162,13 +162,13 @@ class NFSeDownloader:
             sess.verify = True
             pdf_dl = NFSePDFDownloader(sess, timeout)
 
-            nsu = self.ler_ultimo_nsu(cnpj)
+            nsu = self.ler_ultimo_nsu(cnpjcpf)
             try:
                 while running():
                     query_nsu = max(0, nsu - 1)
-                    url = f"{self.BASE_URL}/{query_nsu:020d}?cnpj={cnpj}"
+                    url = f"{self.BASE_URL}/{query_nsu:020d}
                     write(
-                        f"Consultando NSU {nsu} (consulta {query_nsu}) para CNPJ {cnpj}...",
+                        f"Consultando NSU {nsu} (consulta {query_nsu}) para CNPJ/CPF {cnpjcpf}...",
                         log=True,
                     )
                     try:
@@ -176,7 +176,7 @@ class NFSeDownloader:
                     except requests.exceptions.RequestException as e:
                         self.logger.error("Erro de conexão: %s", e)
                         write(f"Erro de conexão: {e}", log=True)
-                        self.salvar_ultimo_nsu(nsu, cnpj)
+                        self.salvar_ultimo_nsu(nsu, cnpjcpf)
                         break
 
                     if resp.status_code == 200:
@@ -232,18 +232,18 @@ class NFSeDownloader:
                                             log=True,
                                         )
                                 nsu_maior = max(nsu_maior, nsu_item)
-                                self.salvar_ultimo_nsu(nsu_maior + 1, cnpj)
+                                self.salvar_ultimo_nsu(nsu_maior + 1, cnpjcpf)
 
                             if stop_loop or not running():
-                                self.salvar_ultimo_nsu(max(1, nsu_maior), cnpj)
+                                self.salvar_ultimo_nsu(max(1, nsu_maior), cnpjcpf)
                                 break
 
-                            self.salvar_ultimo_nsu(nsu_maior + 1, cnpj)
+                            self.salvar_ultimo_nsu(nsu_maior + 1, cnpjcpf)
                             nsu = nsu_maior + 1
                         else:
                             self.logger.error("Resposta inesperada ou nenhum documento localizado.")
                             write("Resposta inesperada ou nenhum documento localizado.", log=True)
-                            self.salvar_ultimo_nsu(nsu, cnpj)
+                            self.salvar_ultimo_nsu(nsu, cnpjcpf)
                             break
 
                         write(f"Aguardando {delay_seconds} segundos para o próximo lote...", log=True)
@@ -254,12 +254,12 @@ class NFSeDownloader:
 
                     elif resp.status_code == 204:
                         write("Nenhuma nota encontrada. Fim da consulta.", log=True)
-                        self.salvar_ultimo_nsu(nsu, cnpj)
+                        self.salvar_ultimo_nsu(nsu, cnpjcpf)
                         break
                     else:
                         self.logger.error("Erro: %s %s", resp.status_code, resp.text)
                         write(f"Erro: {resp.status_code} {resp.text}", log=True)
-                        self.salvar_ultimo_nsu(nsu, cnpj)
+                        self.salvar_ultimo_nsu(nsu, cnpjcpf)
                         break
 
             finally:
