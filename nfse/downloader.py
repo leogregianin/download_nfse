@@ -166,7 +166,7 @@ class NFSeDownloader:
             try:
                 while running():
                     query_nsu = max(0, nsu - 1)
-                    url = f"{self.BASE_URL}/{query_nsu:020d}
+                    url = f"{self.BASE_URL}/{query_nsu:020d}"
                     write(
                         f"Consultando NSU {nsu} (consulta {query_nsu}) para CNPJ/CPF {cnpjcpf}...",
                         log=True,
